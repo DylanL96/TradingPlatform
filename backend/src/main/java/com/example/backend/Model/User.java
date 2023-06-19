@@ -2,33 +2,34 @@ package com.example.backend.Model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long userID;
     private String username;
-
     private String password;
+    private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
     private double cashBalance;
-
-    public User() {
-        // Default constructor required by JPA
-    }
 
     public User(String username, String password, double initialCashBalance) {
         this.username = username;
@@ -70,6 +71,4 @@ public class User {
             System.out.println("Insufficient quantity to sell the stock.");
         }
     }
-
-    // Other methods and getters/setters
 }
