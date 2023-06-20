@@ -1,4 +1,4 @@
-package com.example.backend.DTO;
+package com.example.backend.Models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRequest {
+public class User {
+  private String userID;
+  private String name;
+  private String email;
 
-    private String username ;
-    private String password;
 }
