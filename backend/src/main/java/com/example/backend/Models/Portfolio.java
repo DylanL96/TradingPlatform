@@ -1,12 +1,17 @@
 package com.example.backend.Models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,21 +21,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "stocks")
-public class Stock {
+@Table(name = "portfolio")
+public class Portfolio {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long ID;
-  private String symbol;
-  private String name;
-  private int quantity;
-  private double price;
+  private Long portfolioID;
 
-  @ManyToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "portfolio_id")
-  private Portfolio portfolio;
+  @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Stock> stocks = new ArrayList<>();
 }
