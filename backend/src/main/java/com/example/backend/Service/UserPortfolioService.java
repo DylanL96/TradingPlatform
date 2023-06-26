@@ -4,5 +4,6 @@ import com.example.backend.Models.Stock;
 import com.example.backend.Models.User;
 
 public interface UserPortfolioService {
-  void addToPortfolio(User user, Stock stock);
+  void buyStock(User user, Stock stock, int quantity);
+
 }
