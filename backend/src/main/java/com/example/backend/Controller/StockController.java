@@ -1,5 +1,6 @@
 package com.example.backend.Controller;
 
+import com.example.backend.DTO.StockRequestDTO;
 import com.example.backend.Models.Stock;
 import com.example.backend.Models.User;
 import com.example.backend.Repositories.StockRepository;
@@ -12,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,16 +32,32 @@ public class StockController {
     @PostMapping("/{userId}/buy/{stockId}")
     public ResponseEntity<String> buyStock(
             @PathVariable("userId") Long userId,
-            @PathVariable("stockId") Long stockId,
-            @RequestParam("quantity") int quantity) {
+            @RequestBody StockRequestDTO requestDTO) {
         try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new NotFoundException());
-            Stock stock = stockRepository.findById(stockId)
+            Stock stock = stockRepository.findById(requestDTO.getStockId())
                     .orElseThrow(() -> new NotFoundException());
+    
+            // Check if the requested quantity is available
+            if (stock.getQuantity() < requestDTO.getQuantity()) {
+                return ResponseEntity.badRequest().body("Insufficient stock quantity");
+            }
+            int purchasedQuantity = requestDTO.getQuantity();
 
-            userPortfolioService.buyStock(user, stock, quantity);
-            
+            // Check if the requested quantity is available
+            int availableQuantity = stock.getQuantity();
+            if (availableQuantity < purchasedQuantity) {
+                return ResponseEntity.badRequest().body("Insufficient stock quantity");
+            }
+    
+            userPortfolioService.buyStock(user, stock, purchasedQuantity);
+    
+            // Update the stock quantity
+            int updatedQuantity = availableQuantity - purchasedQuantity;
+            stock.setQuantity(updatedQuantity);
+            stockRepository.save(stock);
+    
             return ResponseEntity.ok("Stock bought successfully");
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -48,4 +65,5 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error buying stock");
         }
     }
+    
 }
