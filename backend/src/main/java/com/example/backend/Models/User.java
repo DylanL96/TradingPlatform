@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ public class User {
   private String email;
   private String password;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "portfolio_id")
   private Portfolio portfolio;
 
   public void addToPortfolio(Stock stock) {
