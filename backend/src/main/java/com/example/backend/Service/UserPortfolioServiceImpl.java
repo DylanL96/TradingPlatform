@@ -1,7 +1,6 @@
 package com.example.backend.Service;
 
 import java.util.Map;
-import java.util.Optional;
 
 import com.example.backend.Models.Portfolio;
 import com.example.backend.Models.Stock;
