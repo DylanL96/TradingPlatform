@@ -26,6 +26,7 @@ public class User {
   private String name;
   private String email;
   private String password;
+  private double funds = 50000.0;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "portfolio_id")

@@ -47,7 +47,7 @@ public class StockController {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new NotFoundException());
     
-            // Check if the requested quantity is available
+            // Check if the requested quantity is valid
             if (stock.getQuantity() <= 0) {
                 return ResponseEntity.badRequest().body("Invalid stock quantity");
             }
@@ -64,12 +64,24 @@ public class StockController {
                 return ResponseEntity.badRequest().body("Insufficient stock quantity");
             }
     
+            // Check if the user has sufficient funds
+            double stockPrice = existingStock.getPrice();
+            double totalCost = stockPrice * stock.getQuantity();
+            if (user.getFunds() < totalCost) {
+                return ResponseEntity.badRequest().body("Insufficient funds");
+            }
+    
             userPortfolioService.buyStock(user, existingStock, stock.getQuantity());
     
             // Update the stock quantity
             int updatedQuantity = availableQuantity - stock.getQuantity();
             existingStock.setQuantity(updatedQuantity);
             stockRepository.save(existingStock);
+    
+            // Deduct the total cost from the user's funds
+            double updatedFunds = user.getFunds() - totalCost;
+            user.setFunds(updatedFunds);
+            userRepository.save(user);
     
             return ResponseEntity.ok("Stock bought successfully");
         } catch (NotFoundException e) {
@@ -78,6 +90,60 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error buying stock");
         }
     }
+
+    @PostMapping("/{userId}/sell")
+    public ResponseEntity<String> sellStock(
+            @PathVariable("userId") Long userId,
+            @RequestBody Stock stock) {
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException());
+    
+            // Check if the requested quantity is valid
+            if (stock.getQuantity() <= 0) {
+                return ResponseEntity.badRequest().body("Invalid stock quantity");
+            }
+    
+            // Check if the stock is available in the repository
+            Stock existingStock = stockRepository.findBySymbol(stock.getSymbol());
+            if (existingStock == null) {
+                return ResponseEntity.badRequest().body("Stock not found");
+            }
+    
+            // Check if the user has the stock in the portfolio
+            Map<String, Integer> stocks = user.getPortfolio().getStocks();
+            if (!stocks.containsKey(stock.getSymbol())) {
+                return ResponseEntity.badRequest().body("Stock not owned by user");
+            }
+    
+            // Check if the user has sufficient quantity to sell
+            int availableQuantity = stocks.get(stock.getSymbol());
+            if (availableQuantity < stock.getQuantity()) {
+                return ResponseEntity.badRequest().body("Insufficient stock quantity");
+            }
+    
+            // Calculate the total selling price
+            double stockPrice = existingStock.getPrice();
+            double totalSaleAmount = stockPrice * stock.getQuantity();
+    
+            // Update the user's funds and stock quantity
+            user.setFunds(user.getFunds() + totalSaleAmount);
+            int updatedQuantity = availableQuantity - stock.getQuantity();
+            stocks.put(stock.getSymbol(), updatedQuantity);
+    
+            // Save the changes to the user and stock
+            userRepository.save(user);
+            stockRepository.save(existingStock);
+    
+            return ResponseEntity.ok("Stock sold successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error selling stock");
+        }
+    }
+    
+    
     
 
     @GetMapping("/{userId}/portfolio")
