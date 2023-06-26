@@ -1,12 +1,9 @@
 package com.example.backend.Controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.example.backend.DTO.PortfolioDTO;
-import com.example.backend.DTO.StockDTO;
 import com.example.backend.DTO.StockRequestDTO;
 import com.example.backend.Models.Portfolio;
 import com.example.backend.Models.Stock;
@@ -107,8 +104,5 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user portfolio");
         }
     }
-    
-    
-    
     
 }

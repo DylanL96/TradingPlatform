@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 public class PortfolioDTO {
   private Long portfolioID;
   private Long userID;
-  private String symbol;
-  private int quantity;
   private Map<String, Integer> stocks;
 
   public void setStocks(Map<String, Integer> stocks) {
