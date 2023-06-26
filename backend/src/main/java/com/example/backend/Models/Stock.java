@@ -26,6 +26,12 @@ public class Stock {
   private int quantity;
   private double price;
 
+  public Stock(String symbol, Double price, int quantity) {
+    this.symbol = symbol;
+    this.price = price;
+    this.quantity = quantity;
+}
+
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
