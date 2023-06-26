@@ -1,5 +1,6 @@
 package com.example.backend.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 import com.example.backend.Models.Portfolio;
@@ -23,24 +24,22 @@ public class UserPortfolioServiceImpl implements UserPortfolioService {
   @Override
   public void buyStock(User user, Stock stock, int quantity) {
       Portfolio portfolio = user.getPortfolio();
-      // Check if the stock is already present in the portfolio
-      Optional<Stock> existingStock = portfolio.getStocks().stream()
-              .filter(s -> s.getSymbol().equals(stock.getSymbol()))
-              .findFirst();
+      Map<String, Integer> stockMap = portfolio.getStocks();
   
-      if (existingStock.isPresent()) {
+      // Check if the stock is already present in the portfolio
+      if (stockMap.containsKey(stock.getSymbol())) {
           // Stock is already in the portfolio, update the quantity
-          Stock stockToUpdate = existingStock.get();
-          int newQuantity = stockToUpdate.getQuantity() + quantity;
-          stockToUpdate.setQuantity(newQuantity);
+          int currentQuantity = stockMap.get(stock.getSymbol());
+          int newQuantity = currentQuantity + quantity;
+          stockMap.put(stock.getSymbol(), newQuantity);
       } else {
           // Stock is not in the portfolio, add a new entry
-          stock.setQuantity(quantity);
-          portfolio.getStocks().add(stock);
+          stockMap.put(stock.getSymbol(), quantity);
       }
   
       // Save the updated portfolio
       portfolioRepository.save(portfolio);
   }
+  
   
 }

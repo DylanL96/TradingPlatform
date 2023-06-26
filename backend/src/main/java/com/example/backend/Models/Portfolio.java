@@ -1,15 +1,21 @@
 package com.example.backend.Models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -31,6 +37,15 @@ public class Portfolio {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Stock> stocks = new ArrayList<>();
+  @ElementCollection
+  @CollectionTable(name = "portfolio_stock_mapping", joinColumns = @JoinColumn(name = "portfolio_id"))
+  @MapKeyColumn(name = "stock_symbol")
+  @Column(name = "quantity")
+  private Map<String, Integer> stocks = new HashMap<>();
+
+  // Constructors, getters, and setters
+
+  public void addStock(String symbol, int quantity) {
+      stocks.put(symbol, quantity);
+  }
 }

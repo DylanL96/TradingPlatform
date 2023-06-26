@@ -87,10 +87,7 @@ public class StockController {
             Portfolio portfolio = portfolioRepository.findByUser(user)
                     .orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
     
-            Map<String, Integer> stockMap = new HashMap<>();
-            for (Stock stock : portfolio.getStocks()) {
-                stockMap.put(stock.getSymbol(), stock.getQuantity());
-            }
+            Map<String, Integer> stockMap = portfolio.getStocks();
     
             PortfolioDTO portfolioDTO = new PortfolioDTO();
             portfolioDTO.setPortfolioID(portfolio.getPortfolioID());
@@ -104,5 +101,6 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user portfolio");
         }
     }
+    
     
 }

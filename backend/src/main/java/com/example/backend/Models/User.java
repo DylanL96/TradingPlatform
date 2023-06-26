@@ -1,5 +1,7 @@
 package com.example.backend.Models;
 
+import java.util.HashMap;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +35,9 @@ public class User {
     if (portfolio == null) {
         portfolio = new Portfolio();
         portfolio.setUser(this);
+        portfolio.setStocks(new HashMap<>());
     }
-    portfolio.getStocks().add(stock);
+    portfolio.getStocks().put(stock.getSymbol(), stock.getQuantity());
     stock.setPortfolio(portfolio);
 }
 }
