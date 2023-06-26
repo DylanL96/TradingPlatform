@@ -1,5 +1,6 @@
 import './App.css';
 import StockTradingPlatform from './Components/StockTradingPlatform';
+import Login from './Components/Login';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -37,6 +38,7 @@ const App = () => {
       ) : (
         <div>No data available</div>
       )}
+      <Login/>
     </div>
   );
 };

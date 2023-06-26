@@ -2,6 +2,7 @@ package com.example.backend.Controller;
 
 import com.example.backend.DTO.AuthenticationRequest;
 import com.example.backend.DTO.AuthenticationResponse;
+import com.example.backend.Repositories.UserRepository;
 import com.example.backend.Service.Jwt.UserDetailsServiceImpl;
 import com.example.backend.Utils.JwtUtil;
 
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthenticationController {
   
   @Autowired
@@ -31,7 +34,8 @@ public class AuthenticationController {
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
   
-
+  @Autowired
+  private UserRepository userRepository;
   
 
   @PostMapping("/authenticate")
@@ -45,12 +49,12 @@ public class AuthenticationController {
           return null;
       }
 
+      Long userId = userRepository.findIdByEmail(authenticationRequest.getEmail());
       final UserDetails userDetails = userDetailsService.loadUserByUsername(
         authenticationRequest.getEmail());
-      
-      final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-      return new AuthenticationResponse(jwt);
+      final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+      return new AuthenticationResponse(jwt, userId);
 
   }
 }
