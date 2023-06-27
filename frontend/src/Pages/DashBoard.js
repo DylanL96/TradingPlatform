@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import BuyStock from '../Components/BuyStock';
 import SellStock from '../Components/SellStock';
-
+import '../Styles/DashBoard.css'
 
 const Dashboard = () => {
   const [portfolioData, setPortfolioData] = useState([]);
@@ -24,24 +24,38 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <h2>User Dashboard</h2>
-      <h3>Portfolio</h3>
-      <Link to="/">Logout</Link>
-      <BuyStock userID={userID}/>
-      <SellStock userID={userID}/>
-      {Object.keys(portfolioData).length > 0 ? (
-        <ul>
-          {Object.keys(portfolioData).map((key) => (
-            <li key={key}>
-              <strong>{key}: </strong>
-              {portfolioData[key]}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No portfolio data available.</p>
-      )}
+    <div className="dashboard-container">
+      <header className="dashboard-header">
+        <h2 className="dashboard-heading">User Dashboard</h2>
+        <Link to="/" className="dashboard-logout-link">Logout</Link>
+      </header>
+      <section className="dashboard-section">
+        <h3 className="dashboard-subheading">Portfolio</h3>
+        <table className="table dashboard-portfolio-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(portfolioData).length > 0 ? (
+              Object.keys(portfolioData).map((key) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{portfolioData[key]}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No portfolio data available.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <BuyStock userID={userID}/>
+        <SellStock userID={userID}/>
+      </section>
     </div>
   );
 };

@@ -1,0 +1,29 @@
+.homepage-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.homepage-nav {
+  margin-bottom: 20px;
+}
+
+.homepage-nav-list {
+  list-style: none;
+  padding: 0;
+}
+
+.homepage-nav-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.homepage-nav-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.homepage-heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,57 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-heading {
+  font-size: 28px;
+}
+
+.dashboard-logout-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.dashboard-section {
+  margin-bottom: 40px;
+}
+
+.dashboard-subheading {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.dashboard-portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
+
+.dashboard-portfolio-table th,
+.dashboard-portfolio-table td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.dashboard-portfolio-table th {
+  text-align: left;
+}
+
+.dashboard-portfolio-table td:first-child {
+  width: 150px;
+}
+
+.dashboard-portfolio-table td:last-child {
+  width: 100px;
+}
+
+.dashboard-portfolio-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}

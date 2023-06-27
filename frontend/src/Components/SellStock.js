@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../Styles/SellStock.css';
 
-const SellStock = ({userID}) => {
+const SellStock = ({ userID }) => {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState('');
 
@@ -34,18 +35,18 @@ const SellStock = ({userID}) => {
   };
 
   return (
-    <div>
-      <h2>Sell Stock</h2>
+    <div className="sell-stock-container">
+      <h2 className="sell-stock-heading">Sell Stock</h2>
       <form>
-        <div>
-          <label>Stock Symbol:</label>
-          <input type="text" value={symbol} onChange={handleSymbolChange} />
+        <div className="form-group">
+          <label className="form-label">Stock Symbol:</label>
+          <input className="form-input" type="text" value={symbol} onChange={handleSymbolChange} />
         </div>
-        <div>
-          <label>Quantity:</label>
-          <input type="number" value={quantity} onChange={handleQuantityChange} />
+        <div className="form-group">
+          <label className="form-label">Quantity:</label>
+          <input className="form-input" type="number" value={quantity} onChange={handleQuantityChange} />
         </div>
-        <button type="button" onClick={handleSellStock}>Buy</button>
+        <button className="sell-button" type="button" onClick={handleSellStock}>Sell</button>
       </form>
     </div>
   );

@@ -3,6 +3,7 @@ import axios from 'axios';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 import { useNavigate } from 'react-router-dom';
+import '../Styles/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,10 +14,9 @@ const Login = () => {
     loading: false
   });
 
-  const {email, password, errorMessage, loading} = formData;
+  const { email, password, errorMessage, loading } = formData;
 
-
-  const handleChange = event => {
+  const handleChange = (event) => {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -24,68 +24,84 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Sign in form submitted');
-    
-    if(isEmpty(email) || isEmpty(password)){
+
+    if (isEmpty(email) || isEmpty(password)) {
       setFormData({
         ...formData,
         errorMessage: 'All fields are required'
-      })
-    } else if (!isEmail(email)){
+      });
+    } else if (!isEmail(email)) {
       setFormData({
         ...formData,
         errorMessage: 'Invalid email'
-      })
+      });
     } else {
+      setFormData({ ...formData, loading: true });
 
-      // setting the form data and creating a new iterable copy of the array using spread operator.
-      setFormData({...formData, loading: true})
-
-      // sending the destructured data object to the signin axios POST request
-      axios.post('http://localhost:8080/authenticate', formData
-        ).then(response => {
-          console.log(response)
-          // Assuming the response contains user information such as userID
+      axios
+        .post('http://localhost:8080/authenticate', formData)
+        .then((response) => {
+          console.log(response);
           const userId = response.data.userID;
-          // Redirect to the user dashboard page with the userID as a parameter
           navigate(`/dashboard/${userId}`);
         })
-        .catch(error => {
-          console.log(error)
+        .catch((error) => {
+          console.log(error);
           setFormData({
             ...formData,
             errorMessage: 'Invalid email or password. Try again.'
-          })
-        })
+          });
+        });
     }
   };
 
   const showSigninForm = () => (
-    <div className="signup-form">
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2 className="login-heading">Log in</h2>
         <div className="form-group">
-        <h2>Log in</h2>
           <label htmlFor="exampleInputEmail1">Email address</label>
-          <input name="email"  type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" onChange={handleChange}/>
-          <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+          <input
+            name="email"
+            type="email"
+            className="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+            onChange={handleChange}
+          />
+          <small id="emailHelp" className="form-text text-muted">
+            We'll never share your email with anyone else.
+          </small>
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputPassword1">Password</label>
-          <input name="password" type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" onChange={handleChange}/>
+          <input
+            name="password"
+            type="password"
+            className="form-control"
+            id="exampleInputPassword1"
+            placeholder="Password"
+            onChange={handleChange}
+          />
         </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <button type="submit" className="btn btn-primary login-button">
+          Submit
+        </button>
       </form>
     </div>
-  )
+  );
+
   return (
     <div>
       {loading}
       {errorMessage}
       {showSigninForm()}
     </div>
-  )
+  );
 };
 
 export default Login;
