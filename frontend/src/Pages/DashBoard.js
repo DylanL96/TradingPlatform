@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import BuyStock from '../Components/BuyStock';
+import SellStock from '../Components/SellStock';
 
 const Dashboard = () => {
   const [portfolioData, setPortfolioData] = useState([]);
@@ -24,6 +26,8 @@ const Dashboard = () => {
     <div>
       <h2>User Dashboard</h2>
       <h3>Portfolio</h3>
+      <BuyStock userID={userID}/>
+      <SellStock userID={userID}/>
       {Object.keys(portfolioData).length > 0 ? (
         <ul>
           {Object.keys(portfolioData).map((key) => (

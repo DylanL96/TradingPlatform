@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const SellStock = () => {
+const SellStock = ({userID}) => {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState('');
 
@@ -13,8 +14,23 @@ const SellStock = () => {
   };
 
   const handleSellStock = () => {
-    setSymbol('');
-    setQuantity('');
+    const payload = {
+      symbol,
+      quantity
+    };
+
+    axios.post(`http://localhost:8080/api/stocks/${userID}/sell`, payload)
+      .then(response => {
+        console.log(response);
+        // Handle the response
+        setSymbol('');
+        setQuantity('');
+        console.log("successfully sold stock");
+      })
+      .catch(error => {
+        console.log(error);
+        // Handle the error
+      });
   };
 
   return (
