@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 import { useNavigate } from 'react-router-dom';
+import {authenticateUser} from '../Controller/AuthenticateController';
 import '../Styles/Login.css';
 
 const Login = () => {
@@ -24,9 +24,8 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Sign in form submitted');
 
     if (isEmpty(email) || isEmpty(password)) {
       setFormData({
@@ -40,21 +39,19 @@ const Login = () => {
       });
     } else {
       setFormData({ ...formData, loading: true });
-
-      axios
-        .post('http://localhost:8080/authenticate', formData)
-        .then((response) => {
-          console.log(response);
-          const userId = response.data.userID;
-          navigate(`/dashboard/${userId}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          setFormData({
-            ...formData,
-            errorMessage: 'Invalid email or password. Try again.'
-          });
+      
+      try {
+        const data = await authenticateUser(formData);
+        console.log(data);
+        const userId = data.userID;
+        navigate(`/dashboard/${userId}`);
+      } catch (error) {
+        console.log(error);
+        setFormData({
+          ...formData,
+          errorMessage: 'Invalid email or password. Try again.'
         });
+      }
     }
   };
 
