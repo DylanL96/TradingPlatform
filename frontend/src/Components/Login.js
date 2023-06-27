@@ -42,7 +42,13 @@ const Login = () => {
       setFormData({...formData, loading: true})
 
       // sending the destructured data object to the signin axios POST request
-      axios.post('http://localhost:8080/api/authenticate', formData)
+      axios.post('http://localhost:8080/authenticate', formData, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      })
         .then(response => {
           console.log(response)
         })
