@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,15 +44,13 @@ const Login = () => {
       setFormData({...formData, loading: true})
 
       // sending the destructured data object to the signin axios POST request
-      axios.post('http://localhost:8080/authenticate', formData, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        }
-      })
-        .then(response => {
+      axios.post('http://localhost:8080/authenticate', formData
+        ).then(response => {
           console.log(response)
+          // Assuming the response contains user information such as userID
+          const userId = response.data.userID;
+          // Redirect to the user dashboard page with the userID as a parameter
+          navigate(`/dashboard/${userId}`);
         })
         .catch(error => {
           console.log(error)
