@@ -42,7 +42,6 @@ const Login = () => {
       
       try {
         const data = await authenticateUser(formData);
-        console.log(data);
         const userId = data.userID;
         navigate(`/dashboard/${userId}`);
       } catch (error) {
